@@ -10,7 +10,7 @@
     owner: root
     group: root
     mode: "0644"
-  notify: restart chronyd
+  notify: Restart chronyd
 
 - name: Open NTP in firewall (server only)
   ansible.posix.firewalld:

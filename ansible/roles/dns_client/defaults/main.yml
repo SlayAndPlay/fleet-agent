@@ -1,2 +1,2 @@
-dns_servers: [192.168.56.10]
-dns_search: lab.local
+dns_client_servers: [192.168.56.10]
+dns_client_search: lab.local

@@ -5,8 +5,8 @@
 
 - name: Mount NFS share
   ansible.posix.mount:
-    path: "{{ nfs_mountpoint }}"
-    src: "{{ nfs_remote }}"
+    path: "{{ nfs_client_mountpoint }}"
+    src: "{{ nfs_client_remote }}"
     fstype: nfs4
     opts: _netdev,nofail
     state: mounted

@@ -6,8 +6,8 @@
     mode: "0644"
     content: |
       [global-dns]
-      searches={{ dns_search }}
+      searches={{ dns_client_search }}
 
       [global-dns-domain-*]
-      servers={{ dns_servers | join(',') }}
-  notify: reload NetworkManager
+      servers={{ dns_client_servers | join(',') }}
+  notify: Reload NetworkManager

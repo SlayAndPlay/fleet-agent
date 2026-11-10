@@ -14,7 +14,7 @@
       X11Forwarding no
       MaxAuthTries 4
       LoginGraceTime 30
-  notify: restart sshd
+  notify: Restart sshd
 
 - name: Enable and start auditd and firewalld
   ansible.builtin.service:
@@ -25,6 +25,7 @@
 
 - name: Check SELinux is enforcing
   ansible.builtin.command: getenforce
-  register: selinux_mode
+  register: baseline_selinux_mode
+  check_mode: false
   changed_when: false
-  failed_when: selinux_mode.stdout != "Enforcing"
+  failed_when: baseline_selinux_mode.stdout != "Enforcing"

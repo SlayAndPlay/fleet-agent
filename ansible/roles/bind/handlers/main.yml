@@ -1,4 +1,4 @@
-- name: restart named
+- name: Restart named
   ansible.builtin.service:
     name: named
     state: restarted
