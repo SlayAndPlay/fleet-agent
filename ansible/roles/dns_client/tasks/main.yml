@@ -1,0 +1,13 @@
+- name: Point NetworkManager at lab DNS
+  ansible.builtin.copy:
+    dest: /etc/NetworkManager/conf.d/90-lab-dns.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [global-dns]
+      searches={{ dns_search }}
+
+      [global-dns-domain-*]
+      servers={{ dns_servers | join(',') }}
+  notify: reload NetworkManager

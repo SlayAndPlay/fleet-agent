@@ -1,0 +1,52 @@
+- name: Install LVM and NFS packages
+  ansible.builtin.dnf:
+    name: [lvm2, nfs-utils]
+    state: present
+
+- name: Create volume group
+  community.general.lvg:
+    vg: "{{ nfs_vg }}"
+    pvs: "{{ nfs_disk }}"
+
+- name: Create logical volume
+  community.general.lvol:
+    vg: "{{ nfs_vg }}"
+    lv: "{{ nfs_lv }}"
+    size: "{{ nfs_lv_size }}"
+
+- name: Create XFS filesystem
+  community.general.filesystem:
+    fstype: xfs
+    dev: "/dev/{{ nfs_vg }}/{{ nfs_lv }}"
+
+- name: Mount the volume
+  ansible.posix.mount:
+    path: "{{ nfs_export_path }}"
+    src: "/dev/{{ nfs_vg }}/{{ nfs_lv }}"
+    fstype: xfs
+    state: mounted
+
+- name: Export directory permissions
+  ansible.builtin.file:
+    path: "{{ nfs_export_path }}"
+    mode: "0777"
+
+- name: Define export
+  ansible.builtin.copy:
+    dest: /etc/exports.d/lab.exports
+    content: "{{ nfs_export_path }} {{ nfs_allow }}(rw,sync,root_squash)\n"
+    mode: "0644"
+  notify: reload exports
+
+- name: Open NFS in firewall
+  ansible.posix.firewalld:
+    service: nfs
+    permanent: true
+    immediate: true
+    state: enabled
+
+- name: Enable NFS server
+  ansible.builtin.service:
+    name: nfs-server
+    state: started
+    enabled: true

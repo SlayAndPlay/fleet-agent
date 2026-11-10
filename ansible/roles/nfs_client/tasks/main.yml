@@ -1,0 +1,12 @@
+- name: Install nfs-utils
+  ansible.builtin.dnf:
+    name: nfs-utils
+    state: present
+
+- name: Mount NFS share
+  ansible.posix.mount:
+    path: "{{ nfs_mountpoint }}"
+    src: "{{ nfs_remote }}"
+    fstype: nfs4
+    opts: _netdev,nofail
+    state: mounted

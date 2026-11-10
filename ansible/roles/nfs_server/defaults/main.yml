@@ -1,0 +1,6 @@
+nfs_disk: /dev/vdb
+nfs_vg: vg_data
+nfs_lv: lv_export
+nfs_lv_size: 6g          # leaves ~4G free in the VG for lvextend practice
+nfs_export_path: /srv/nfs/data
+nfs_allow: 192.168.56.0/24

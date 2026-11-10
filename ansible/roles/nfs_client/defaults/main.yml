@@ -1,0 +1,2 @@
+nfs_remote: nfs01.lab.local:/srv/nfs/data
+nfs_mountpoint: /mnt/data

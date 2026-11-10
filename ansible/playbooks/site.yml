@@ -20,3 +20,18 @@
   hosts: dns
   become: true
   roles: [bind]
+
+- name: DNS clients
+  hosts: all
+  become: true
+  roles: [dns_client]
+
+- name: NFS server
+  hosts: nfs
+  become: true
+  roles: [nfs_server]
+
+- name: NFS clients
+  hosts: app
+  become: true
+  roles: [nfs_client]
