@@ -1,6 +1,7 @@
 pipeline {
   agent any
   options { timestamps() }
+  triggers { cron('H/30 * * * *') }
   stages {
     stage('Syntax') {
       steps { dir('ansible') { sh 'ansible-playbook playbooks/site.yml --syntax-check' } }
@@ -9,7 +10,19 @@ pipeline {
       steps { dir('ansible') { sh 'ansible-lint' } }
     }
     stage('Drift check') {
-      steps { dir('ansible') { sh 'ansible-playbook playbooks/site.yml --check --diff' } }
+      steps {
+        dir('ansible') {
+          sh '''
+            ansible-playbook playbooks/site.yml --check --diff > drift.out 2>&1
+            rc=$?
+            cat drift.out
+            if [ $rc -ne 0 ] || grep -Eq "changed=[1-9]|failed=[1-9]|unreachable=[1-9]" drift.out; then
+              echo "DRIFT OR FAILURE DETECTED"
+              exit 1
+            fi
+          '''
+        }
+      }
     }
   }
 }
