@@ -1,0 +1,9 @@
+FROM docker.io/jenkins/jenkins:lts-jdk17
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends python3-venv openssh-client git \
+    && rm -rf /var/lib/apt/lists/*
+RUN python3 -m venv /opt/ansible \
+    && /opt/ansible/bin/pip install --no-cache-dir ansible-core ansible-lint
+ENV PATH=/opt/ansible/bin:$PATH
+USER jenkins
+RUN ansible-galaxy collection install ansible.posix community.general

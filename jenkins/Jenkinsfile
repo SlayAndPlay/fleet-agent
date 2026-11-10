@@ -1,0 +1,15 @@
+pipeline {
+  agent any
+  options { timestamps() }
+  stages {
+    stage('Syntax') {
+      steps { dir('ansible') { sh 'ansible-playbook playbooks/site.yml --syntax-check' } }
+    }
+    stage('Lint') {
+      steps { dir('ansible') { sh 'ansible-lint' } }
+    }
+    stage('Drift check') {
+      steps { dir('ansible') { sh 'ansible-playbook playbooks/site.yml --check --diff' } }
+    }
+  }
+}
