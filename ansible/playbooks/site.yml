@@ -1,0 +1,22 @@
+- name: Baseline for every host
+  hosts: all
+  become: true
+  roles: [baseline]
+
+- name: NTP server
+  hosts: ntp
+  become: true
+  roles:
+    - role: chrony
+      vars:
+        chrony_is_server: true
+
+- name: NTP clients
+  hosts: all:!ntp
+  become: true
+  roles: [chrony]
+
+- name: DNS server
+  hosts: dns
+  become: true
+  roles: [bind]

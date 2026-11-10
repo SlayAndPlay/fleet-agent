@@ -1,0 +1,11 @@
+{% if chrony_is_server %}
+pool 2.almalinux.pool.ntp.org iburst
+allow {{ chrony_allow }}
+local stratum 10
+{% else %}
+server {{ chrony_server }} iburst
+{% endif %}
+driftfile /var/lib/chrony/drift
+makestep 1.0 3
+rtcsync
+logdir /var/log/chrony

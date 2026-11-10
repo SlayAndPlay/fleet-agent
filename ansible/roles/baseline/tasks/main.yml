@@ -1,0 +1,30 @@
+- name: Install baseline packages
+  ansible.builtin.dnf:
+    name: [vim-enhanced, tmux, bind-utils, audit, firewalld, rsync, policycoreutils]
+    state: present
+
+- name: SSH hardening drop-in
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/10-hardening.conf
+    owner: root
+    group: root
+    mode: "0600"
+    content: |
+      PermitRootLogin no
+      X11Forwarding no
+      MaxAuthTries 4
+      LoginGraceTime 30
+  notify: restart sshd
+
+- name: Enable and start auditd and firewalld
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop: [auditd, firewalld]
+
+- name: Check SELinux is enforcing
+  ansible.builtin.command: getenforce
+  register: selinux_mode
+  changed_when: false
+  failed_when: selinux_mode.stdout != "Enforcing"

@@ -1,0 +1,16 @@
+options {
+    listen-on port 53 { 127.0.0.1; {{ bind_listen }}; };
+    directory "/var/named";
+    allow-query { localhost; {{ bind_allow }}; };
+    allow-recursion { localhost; {{ bind_allow }}; };
+    recursion yes;
+    forwarders { 1.1.1.1; 9.9.9.9; };
+    dnssec-validation no;
+};
+
+zone "." IN { type hint; file "named.ca"; };
+
+zone "{{ bind_zone }}" IN {
+    type master;
+    file "{{ bind_zone }}.zone";
+};

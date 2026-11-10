@@ -1,0 +1,8 @@
+bind_listen: 192.168.56.10
+bind_allow: 192.168.56.0/24
+bind_zone: lab.local
+bind_serial: 2026111001   # bump this whenever records change
+bind_records:
+  - { name: dns01, ip: 192.168.56.10 }
+  - { name: ntp01, ip: 192.168.56.11 }
+  - { name: app01, ip: 192.168.56.21 }

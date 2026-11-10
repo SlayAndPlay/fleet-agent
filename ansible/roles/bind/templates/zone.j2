@@ -1,0 +1,6 @@
+$TTL 300
+@ IN SOA dns01.{{ bind_zone }}. admin.{{ bind_zone }}. ( {{ bind_serial }} 3600 900 604800 300 )
+@ IN NS dns01.{{ bind_zone }}.
+{% for r in bind_records %}
+{{ r.name }} IN A {{ r.ip }}
+{% endfor %}
