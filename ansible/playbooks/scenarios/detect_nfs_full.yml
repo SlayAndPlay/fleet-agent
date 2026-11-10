@@ -1,0 +1,14 @@
+- name: Detect full filesystem on NFS export and client mount
+  hosts: nfs:app
+  vars:
+    detect_threshold_pct: 90
+    detect_paths: [/srv/nfs/data, /mnt/data]
+  tasks:
+    - name: Assert usage is below threshold
+      ansible.builtin.assert:
+        that: ((item.size_total - item.size_available) * 100 / item.size_total) < detect_threshold_pct
+        fail_msg: "{{ item.mount }} on {{ inventory_hostname }} is {{ ((item.size_total - item.size_available) * 100 / item.size_total) | round(1) }}% full"
+        success_msg: "{{ item.mount }} on {{ inventory_hostname }} is below {{ detect_threshold_pct }}%"
+      loop: "{{ ansible_facts.mounts | selectattr('mount', 'in', detect_paths) | list }}"
+      loop_control:
+        label: "{{ item.mount }}"

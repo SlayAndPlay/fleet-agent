@@ -1,0 +1,13 @@
+- name: Remediate full NFS export by extending the logical volume
+  hosts: nfs
+  become: true
+  vars:
+    remediate_vg: vg_data
+    remediate_lv: lv_export
+  tasks:
+    - name: Extend LV into free VG space and grow the filesystem
+      community.general.lvol:
+        vg: "{{ remediate_vg }}"
+        lv: "{{ remediate_lv }}"
+        size: 100%VG
+        resizefs: true

@@ -1,0 +1,19 @@
+- name: Inject fault - fill the NFS export
+  hosts: nfs
+  become: true
+  vars:
+    inject_path: /srv/nfs/data
+  tasks:
+    - name: Read free blocks and block size
+      ansible.builtin.command: stat -f -c "%a %S" {{ inject_path }}
+      register: inject_stat
+      changed_when: false
+
+    - name: Compute bytes to allocate (leave 1 MiB)
+      ansible.builtin.set_fact:
+        inject_bytes: "{{ (inject_stat.stdout.split()[0] | int) * (inject_stat.stdout.split()[1] | int) - 1048576 }}"
+
+    - name: Allocate the fill file
+      ansible.builtin.command:
+        cmd: fallocate -l {{ inject_bytes }} {{ inject_path }}/fill.bin
+        creates: "{{ inject_path }}/fill.bin"

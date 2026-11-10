@@ -1,6 +1,6 @@
 nfs_server_disk: /dev/vdb
 nfs_server_vg: vg_data
 nfs_server_lv: lv_export
-nfs_server_lv_size: 6g          # leaves ~4G free in the VG for lvextend practice
+nfs_server_lv_size: 100%VG   # LV was extended during PIR 002
 nfs_server_export_path: /srv/nfs/data
 nfs_server_allow: 192.168.56.0/24
