@@ -7,3 +7,4 @@ kind
 .venv/
 __pycache__/
 *.pyc
+evals/results/*.json
