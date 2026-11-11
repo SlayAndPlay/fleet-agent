@@ -9,8 +9,13 @@
       "mcp__fleet-ops__get_hardware_findings",
       "mcp__fleet-ops__propose_delete_file",
       "mcp__fleet-ops__propose_extend_lv",
-      "mcp__fleet-ops__execute_approved_action"
+      "mcp__fleet-ops__execute_approved_action",
+      "mcp__fleet-ops__get_vg_free"
     ],
-    "deny": ["Bash", "Write", "Edit"]
+    "deny": [
+      "Bash",
+      "Write",
+      "Edit"
+    ]
   }
 }

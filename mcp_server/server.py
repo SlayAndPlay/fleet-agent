@@ -189,7 +189,6 @@ def get_allowed_actions() -> dict:
             "extend_lv": [list(x) for x in sorted(LV_ALLOW)]}
 
 
-if __name__ == "__main__":
 @mcp.tool()
 def get_vg_free(host: str, vg: str = "vg_data") -> dict:
     """READ-ONLY. Size and free space of an allowlisted volume group, in bytes."""
