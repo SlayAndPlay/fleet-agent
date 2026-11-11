@@ -4,3 +4,4 @@ vagrant/kubectl
 kubectl
 kind
 *.tar.gz
+.venv/
