@@ -1,2 +1,6 @@
 .vagrant/
 drift.out
+vagrant/kubectl
+kubectl
+kind
+*.tar.gz

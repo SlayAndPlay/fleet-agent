@@ -1,0 +1,11 @@
+[Unit]
+Description=Prometheus node exporter
+After=network-online.target
+
+[Service]
+User=node_exporter
+ExecStart=/usr/local/bin/node_exporter --collector.systemd
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

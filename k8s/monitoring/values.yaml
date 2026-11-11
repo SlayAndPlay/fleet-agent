@@ -1,0 +1,53 @@
+kubeEtcd:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeProxy:
+  enabled: false
+grafana:
+  enabled: false
+prometheus:
+  prometheusSpec:
+    retention: 2d
+    resources:
+      requests:
+        memory: 400Mi
+    additionalScrapeConfigs:
+      - job_name: fleet-nodes
+        static_configs:
+          - targets: ["192.168.56.10:9100"]
+            labels: {host: dns01, role: dns}
+          - targets: ["192.168.56.11:9100"]
+            labels: {host: ntp01, role: ntp}
+          - targets: ["192.168.56.12:9100"]
+            labels: {host: nfs01, role: nfs}
+          - targets: ["192.168.56.21:9100"]
+            labels: {host: app01, role: app}
+additionalPrometheusRulesMap:
+  fleet-rules:
+    groups:
+      - name: fleet.rules
+        rules:
+          - alert: FleetFilesystemAlmostFull
+            expr: (1 - node_filesystem_avail_bytes{job="fleet-nodes",fstype!~"tmpfs|overlay|squashfs"} / node_filesystem_size_bytes{job="fleet-nodes",fstype!~"tmpfs|overlay|squashfs"}) * 100 > 90
+            for: 1m
+            labels:
+              severity: warning
+            annotations:
+              summary: "{{ $labels.host }} {{ $labels.mountpoint }} is {{ $value | printf \"%.0f\" }}% full"
+          - alert: FleetNodeDown
+            expr: up{job="fleet-nodes"} == 0
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              summary: "{{ $labels.host }} exporter is unreachable"
+          - alert: FleetClockSkew
+            expr: abs(node_timex_offset_seconds{job="fleet-nodes"}) > 0.05
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "{{ $labels.host }} clock offset is {{ $value }}s"

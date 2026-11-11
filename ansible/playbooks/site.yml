@@ -35,3 +35,8 @@
   hosts: app
   become: true
   roles: [nfs_client]
+
+- name: Metrics exporter on every host
+  hosts: all
+  become: true
+  roles: [node_exporter]
