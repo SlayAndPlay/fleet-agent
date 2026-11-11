@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__fleet-ops__check_disk_usage",
+      "mcp__fleet-ops__list_large_files",
+      "mcp__fleet-ops__get_allowed_actions",
+      "mcp__fleet-ops__get_chrony_tracking",
+      "mcp__fleet-ops__dns_query",
+      "mcp__fleet-ops__get_hardware_findings",
+      "mcp__fleet-ops__propose_delete_file",
+      "mcp__fleet-ops__propose_extend_lv",
+      "mcp__fleet-ops__execute_approved_action"
+    ],
+    "deny": ["Bash", "Write", "Edit"]
+  }
+}
