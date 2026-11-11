@@ -190,5 +190,18 @@ def get_allowed_actions() -> dict:
 
 
 if __name__ == "__main__":
-    mcp.run()
+@mcp.tool()
+def get_vg_free(host: str, vg: str = "vg_data") -> dict:
+    """READ-ONLY. Size and free space of an allowlisted volume group, in bytes."""
+    if vg not in {v for (_, v, _) in LV_ALLOW}:
+        return {"error": f"vg not allowlisted; valid: {sorted({v for (_, v, _) in LV_ALLOW})}"}
+    r = ssh(host, ["vgs", "--noheadings", "--nosuffix", "--units", "b",
+                   "-o", "vg_name,vg_size,vg_free", vg], sudo=True)
+    if r["rc"] != 0:
+        return {"error": r["stderr"] or "vgs failed"}
+    name, size, free = r["stdout"].split()
+    return {"host": host, "vg": name, "size_bytes": int(size), "free_bytes": int(free)}
 
+
+if __name__ == "__main__":
+    mcp.run()
