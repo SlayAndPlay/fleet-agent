@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snow-bridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: snow-bridge}
+  template:
+    metadata:
+      labels: {app: snow-bridge}
+    spec:
+      containers:
+        - name: bridge
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SNOW_URL
+              value: "{{ .Values.snowUrl }}"
+          envFrom:
+            - secretRef:
+                name: {{ .Values.secretName }}
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet: {path: /, port: 8080}
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {memory: 64Mi}

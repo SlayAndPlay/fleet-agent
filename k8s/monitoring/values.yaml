@@ -51,3 +51,22 @@ additionalPrometheusRulesMap:
               severity: warning
             annotations:
               summary: "{{ $labels.host }} clock offset is {{ $value }}s"
+alertmanager:
+  config:
+    route:
+      receiver: "null"
+      group_by: [alertname, severity]
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+      routes:
+        - receiver: "null"
+          matchers: ['alertname = "Watchdog"']
+        - receiver: snow
+          matchers: ['job = "fleet-nodes"']
+    receivers:
+      - name: "null"
+      - name: snow
+        webhook_configs:
+          - url: http://snow-bridge.monitoring.svc:8080/
+            send_resolved: true

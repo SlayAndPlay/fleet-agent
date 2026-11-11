@@ -1,0 +1,5 @@
+image:
+  repository: localhost/snow-bridge
+  tag: "0.3"
+snowUrl: https://dev423205.service-now.com
+secretName: snow-credentials
