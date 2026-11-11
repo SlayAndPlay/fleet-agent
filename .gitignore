@@ -5,3 +5,5 @@ kubectl
 kind
 *.tar.gz
 .venv/
+__pycache__/
+*.pyc
